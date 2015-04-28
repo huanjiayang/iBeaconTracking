@@ -23,7 +23,7 @@ class DEPLOYMENT(models.Model):
     AUTHOR = models.CharField(max_length = 250)
     
     def __unicode__(self):
-        print "test"
+        print "test2"
         return self.NAME
 
     
