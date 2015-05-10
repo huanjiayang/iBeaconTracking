@@ -1,26 +1,27 @@
 from django.db import models
 from django.template.defaultfilters import default
+from xmlrpclib import Fault
 
 # Create your models here.
 class FLOORPLAN(models.Model):
-    NAME = models.CharField(max_length = 250)
-    AUTHOR = models.CharField(max_length = 250)
-    FLOOR_MAP = models.CharField(max_length = 250)
-    NOTES = models.CharField(max_length = 250)
-    UPLOAD_TIME = models.DateTimeField('date uploaded')
-    X_ZERO = models.IntegerField(default = 0)
-    Y_ZERO = models.IntegerField(default = 0)
-    SCALE = models.IntegerField(default = 0)
+    NAME = models.CharField(max_length = 250, blank=True, null=True)
+    AUTHOR = models.CharField(max_length = 250, blank=True, null=True)
+    FLOOR_MAP = models.CharField(max_length = 250, blank=True, null=True)
+    NOTES = models.CharField(max_length = 250, blank=True, null=True)
+    UPLOAD_TIME = models.DateTimeField('date uploaded', blank=True, null=True)
+    X_ZERO = models.IntegerField(default = 0, blank=True, null=True)
+    Y_ZERO = models.IntegerField(default = 0, blank=True, null=True)
+    SCALE = models.IntegerField(default = 0, blank=True, null=True)
     
     def __unicode__(self):
         return self.NAME
     
 class DEPLOYMENT(models.Model):
-    FLOORPLAN = models.ForeignKey(FLOORPLAN)
-    NAME = models.CharField(max_length = 250)
-    NOTES = models.CharField(max_length = 250)
-    UPLOAD_TIME = models.DateTimeField('date uploaded')
-    AUTHOR = models.CharField(max_length = 250)
+    FLOORPLAN = models.ForeignKey(FLOORPLAN, null=False)
+    NAME = models.CharField(max_length = 250, blank=True, null=True)
+    NOTES = models.CharField(max_length = 250, blank=True, null=True)
+    UPLOAD_TIME = models.DateTimeField('date uploaded', blank=True, null=True)
+    AUTHOR = models.CharField(max_length = 250, blank=True, null=True)
     
     def __unicode__(self):
         print "test2"
@@ -29,15 +30,15 @@ class DEPLOYMENT(models.Model):
     
 
 class BEACON_POSITION(models.Model):
-    DEPLOYMENT = models.ForeignKey(DEPLOYMENT)
-    TYPE = models.CharField(max_length = 250)
-    BEACON_ID = models.CharField(max_length = 250)
-    BEACON_MAC = models.CharField(max_length = 250)
-    CREATED_BY = models.CharField(max_length = 250)
-    CREATE_TIME = models.DateTimeField('date uploaded')
-    CORD_X = models.DecimalField(default = 0.0, decimal_places=2, max_digits=10)
-    CORD_Y = models.DecimalField(default = 0.0, decimal_places=2, max_digits=10)
-    NOTES = models.CharField(max_length = 250)
+    DEPLOYMENT = models.ForeignKey(DEPLOYMENT, null=False)
+    TYPE = models.CharField(max_length = 250, blank=True, null=True)
+    BEACON_ID = models.CharField(max_length = 250, blank=True, null=True)
+    BEACON_MAC = models.CharField(max_length = 250, blank=True, null=True)
+    CREATED_BY = models.CharField(max_length = 250, blank=True, null=True)
+    CREATE_TIME = models.DateTimeField('date uploaded', blank=True, null=True)
+    CORD_X = models.DecimalField(default = 0.0, decimal_places=2, max_digits=10, blank=True, null=True)
+    CORD_Y = models.DecimalField(default = 0.0, decimal_places=2, max_digits=10, blank=True, null=True)
+    NOTES = models.CharField(max_length = 250, blank=True, null=True)
     
     def __unicode__(self):
         return self.BEACON_MAC
@@ -45,11 +46,11 @@ class BEACON_POSITION(models.Model):
     
 
 class LOC_RECORD(models.Model):
-    DEPLOYMENT = models.ForeignKey(DEPLOYMENT)
-    NAME = models.CharField(max_length = 250)
-    NOTES = models.CharField(max_length = 250)
-    UPLOAD_TIME = models.DateTimeField('date uploaded')
-    AUTHOR = models.CharField(max_length = 250)
+    DEPLOYMENT = models.ForeignKey(DEPLOYMENT, null=False)
+    NAME = models.CharField(max_length = 250, blank=True, null=True)
+    NOTES = models.CharField(max_length = 250, blank=True, null=True)
+    UPLOAD_TIME = models.DateTimeField('date uploaded', blank=True, null=True)
+    AUTHOR = models.CharField(max_length = 250, blank=True, null=True)
     
     def __unicode__(self):
         return self.NAME
@@ -57,11 +58,11 @@ class LOC_RECORD(models.Model):
 
 
 class TARGET(models.Model):
-    NAME = models.CharField(max_length = 250)
-    MOBILE = models.CharField(max_length = 250)
-    NOTES = models.CharField(max_length = 250)
-    MAC = models.CharField(max_length = 250)
-    REFERECE = models.CharField(max_length = 250)
+    NAME = models.CharField(max_length = 250, blank=True, null=True)
+    MOBILE = models.CharField(max_length = 250, blank=True, null=True)
+    NOTES = models.CharField(max_length = 250, blank=True, null=True)
+    MAC = models.CharField(max_length = 250, blank=True, null=True)
+    REFERECE = models.CharField(max_length = 250, blank=True, null=True)
     
     def __unicode__(self):
         return self.NAME
@@ -69,14 +70,14 @@ class TARGET(models.Model):
 
 
 class TARGET_LOC(models.Model):
-    LOC_RECORD = models.ForeignKey(LOC_RECORD)
-    TARGET_ID = models.ForeignKey(TARGET)
-    TYPE = models.CharField(max_length = 250)
-    ALGORITHM = models.CharField(max_length = 250)
-    LOC_TIME = models.DateTimeField('date calculated')
-    CORD_X = models.DecimalField(default = 0.0, decimal_places=2, max_digits=10)
-    CORD_Y = models.DecimalField(default = 0.0, decimal_places=2, max_digits=10)
-    NOTES = models.CharField(max_length = 250)
+    LOC_RECORD = models.ForeignKey(LOC_RECORD, blank=True, null=True)
+    TARGET_ID = models.ForeignKey(TARGET, null=False)
+    TYPE = models.CharField(max_length = 250, blank=True, null=True)
+    ALGORITHM = models.CharField(max_length = 250, blank=True, null=True)
+    LOC_TIME = models.DateTimeField('date calculated', blank=True, null=True)
+    CORD_X = models.DecimalField(default = 0.0, decimal_places=2, max_digits=10, blank=True, null=True)
+    CORD_Y = models.DecimalField(default = 0.0, decimal_places=2, max_digits=10, blank=True, null=True)
+    NOTES = models.CharField(max_length = 250, blank=True, null=True)
     
     def __unicode__(self):
         return self.NOTES
@@ -84,9 +85,9 @@ class TARGET_LOC(models.Model):
     
 
 class RSSI(models.Model):
-    LOC_RECORD = models.ForeignKey(LOC_RECORD)
-    BEACON_POSITION = models.ForeignKey(BEACON_POSITION)
-    RSSI = models.IntegerField(default = 0)
+    LOC_RECORD = models.ForeignKey(LOC_RECORD, blank=True, null=True)
+    BEACON_POSITION = models.ForeignKey(BEACON_POSITION, blank=True, null=True)
+    RSSI = models.IntegerField(default = 0, blank=True, null=True)
     
     def __unicode__(self):
         return self.RSSI
