@@ -1,0 +1,68 @@
+<html>
+	<head>
+		<title>friday afternoon demo</title>
+		<script type="text/javascript" src='test.js'>
+		</script>
+		<script type="text/javascript">
+		var rec;
+		
+			function report(index){
+				rec = index;
+				 var html = '';
+				 html += '<select onchange="parent.write03(this.selectedIndex);">';
+				 for(var i=0; i<music_demo[index].content.length; i++){
+					 html += '<option>';
+					 html += music_demo[index].content[i];
+					 html += '</option>';
+				 }
+				 html += '</select>';
+				
+				 with(document.getElementById('iframe02').contentDocument){
+					 open();
+					 write(html);
+					 close();
+				 }
+			}
+			
+			function write03(index){
+				 with(document.getElementById('iframe03').contentDocument){
+					 open();
+					 write('<h1>User has selected '+ music_demo[rec].content[index] +'</h1>');
+					 close();
+				 }
+			}
+		</script>
+		
+	</head>
+	<body>
+	
+	<iframe id='iframe01'>
+	</iframe>
+	
+	<iframe id='iframe02'>
+	</iframe>
+	
+	<iframe id='iframe03'>
+	</iframe>
+	
+	<script type="text/javascript">
+	 var html = '';
+	 html += '<select onchange="parent.report(this.selectedIndex);">';
+	 for(var i=0; i<music_demo.length; i++){
+		 html += '<option>';
+		 html += music_demo[i].type;
+		 html += '</option>';
+	 }
+	 html += '</select>';
+	 
+	 with(document.getElementById('iframe01').contentDocument){
+		 open();
+		 write(html);
+		 close();
+	 }
+	</script>
+	
+	
+	</body>
+
+</html>
