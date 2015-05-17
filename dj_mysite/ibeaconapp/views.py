@@ -30,7 +30,7 @@ def index(request):
     users = User.objects.exclude(id=request.user.id)
     print 'Main program running'
     variables = RequestContext(request,{'users':users})
-    return render_to_response('home.html',variables)
+    return render_to_response('ibeaconapp/home.html',variables)
 
 
 @async
