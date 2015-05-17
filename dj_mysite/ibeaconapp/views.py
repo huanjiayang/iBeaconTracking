@@ -44,38 +44,14 @@ def listFloorplan(request):
     return JsonResponse(floorplan_list)
 
 def listDeployment(request):
-    deployment_list = [ 
-	              {
-	            	  type:'classical',
-	            	  content:["Beethoven","Mozart","Tchaikovsky"]
-	              },
-				  {
-	            	  type:'pop',
-	            	  content:["Beatles!!!","Corrs","Fleetwood Mac","Status Quo"]
-	              }
-	         ]
+    deployment_list =  {
+	            	          "deploymentlist":["Beethoven","Mozart","Tchaikovsky"]
+	                  }
     return JsonResponse(deployment_list)
 
 def listDataset(request):
-    dataset_list =  [
-
-                        {        
-                        type:'classical',content:[
-                                        {subtype:'Beethoven',subcontent:['211','212','213']},
-                                        {subtype:'Mozart',subcontent:['221','222','223']},
-                                        {subtype:'Tchaikovsky',subcontent:['231','232','233']}
-                                     ]       
-                        },
-                        
-                        {
-                        type:'pop',content:[
-                                    {subtype:'Beatles',subcontent:['111','112','113']},
-                                    {subtype:'Corrs',subcontent:['121','122','123']},
-                                    {subtype:'Fleetwood Mac',subcontent:['131','132','133']},
-                                    {subtype:'Status Quo',subcontent:['141','142','143']}
-                                   ]
-                        }
-
-             ]
+    dataset_list = {        
+                    "datasetlist":["dataset01","dataset02","dataset03"]       
+                    }
     return JsonResponse(dataset_list)
 
