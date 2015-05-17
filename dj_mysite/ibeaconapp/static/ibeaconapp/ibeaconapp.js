@@ -9,7 +9,7 @@ var music_demo = [
 	              }
 	         ]
 
-
+// initialization of home page
 function init(){
 	 var html = '';
 	 for(var i=0; i<music_demo.length; i++){
@@ -21,8 +21,8 @@ function init(){
 	 document.getElementById("floorplan_sel").innerHTML = html;
 }
 
-var rec;
 
+// process floorplan selection change
 function onFloorplanChange(index){
 	rec = index;
 	 var html = '';
@@ -34,10 +34,12 @@ function onFloorplanChange(index){
 	 document.getElementById("deployment_sel").innerHTML = html;
 }
 
+//process deployment selection change
 function onDeploymentChange(index){
 	
 }
 
+//process dataset selection change
 function onDatasetChange(index){
 	
 }
