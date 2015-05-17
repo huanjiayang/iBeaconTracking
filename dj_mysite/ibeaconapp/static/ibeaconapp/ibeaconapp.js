@@ -11,16 +11,27 @@ var music_demo = [
 
 // initialization of home page
 function init(){
-	 var html = '';
-	 for(var i=0; i<music_demo.length; i++){
-		 html += '<option>';
-		 html += music_demo[i].type;
-		 html += '</option>';
-	 }
-	 
-	 document.getElementById("floorplan_sel").innerHTML = html;
+	var parameters = {};
+	$.ajax({
+		url: '/ibeaconapp/floorplan/',
+		type: 'GET',
+		data: parameters,
+		accept: 'application/json',
+		success: function(data, responseText, jqXHR) {
+			var html = "";
+			 
+			 for(var i=0; i<data["floorplanlist"].length; i++){
+				 html += '<option>';
+				 html += data["floorplanlist"][i];
+				 html += '</option>';
+			 }
+			 
+			 document.getElementById("floorplan_sel").innerHTML = html;
+			 
+			},
+		failure: function(){alert('Failed to get floorplan list from server...');}
+	});
 }
-
 
 // process floorplan selection change
 function onFloorplanChange(index){

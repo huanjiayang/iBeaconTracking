@@ -32,10 +32,13 @@ def index(request):
     variables = RequestContext(request,{'users':users})
     return render_to_response('ibeaconapp/home.html',variables)
 
-
 @async
 def getdata(request):
     floorplan_list = FLOORPLAN.OBJECTS.order_by('-id')
     floorplan_list=1
     print floorplan_list
+    return JsonResponse(floorplan_list)
+
+def listFloorplan(request):
+    floorplan_list = {"floorplanlist":["Computer Science floor 3", "Computer Science floor 2","Computer Science floor 1","Computer Science floor 0"]}
     return JsonResponse(floorplan_list)
