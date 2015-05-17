@@ -58,18 +58,18 @@ function onDeploymentChange(index){
 	 rec = index;
 	 var parameters = {};
 	 $.ajax({
-		 url:'/ibeaconapp/deployment',
+		 url:'/ibeaconapp/dataset',
 		 type:'GET',
 		 data: parameters,
 		 accept: 'application/json',
 		 success: function(data, responseText, jqXHR) {
 			 var html = "";
-			 for(var i=0; i<deployment_list[index].content.length; i++){
+			 for(var i=0; i<deployment_list[index].content[index2].subcontent.length; i++){
 			 html += '<option>';
-			 html += deployment[index].content[i];
+			 html += deployment[index].content[index2].subcontent[i];
 			 html += '</option>';
 	 		}
-	 document.getElementById("deployment_sel").innerHTML = html;
+	 document.getElementById("dataset_sel").innerHTML = html;
 		 },
 	 });
 }
