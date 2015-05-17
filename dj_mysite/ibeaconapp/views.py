@@ -42,3 +42,40 @@ def getdata(request):
 def listFloorplan(request):
     floorplan_list = {"floorplanlist":["Computer Science floor 3", "Computer Science floor 2","Computer Science floor 1","Computer Science floor 0"]}
     return JsonResponse(floorplan_list)
+
+def listDeployment(request):
+    deployment_list = [ 
+	              {
+	            	  type:'classical',
+	            	  content:["Beethoven","Mozart","Tchaikovsky"]
+	              },
+				  {
+	            	  type:'pop',
+	            	  content:["Beatles!!!","Corrs","Fleetwood Mac","Status Quo"]
+	              }
+	         ]
+    return JsonResponse(deployment_list)
+
+def listDataset(request):
+    dataset_list =  [
+
+                        {        
+                        type:'classical',content:[
+                                        {subtype:'Beethoven',subcontent:['211','212','213']},
+                                        {subtype:'Mozart',subcontent:['221','222','223']},
+                                        {subtype:'Tchaikovsky',subcontent:['231','232','233']}
+                                     ]       
+                        },
+                        
+                        {
+                        type:'pop',content:[
+                                    {subtype:'Beatles',subcontent:['111','112','113']},
+                                    {subtype:'Corrs',subcontent:['121','122','123']},
+                                    {subtype:'Fleetwood Mac',subcontent:['131','132','133']},
+                                    {subtype:'Status Quo',subcontent:['141','142','143']}
+                                   ]
+                        }
+
+             ]
+    return JsonResponse(dataset_list)
+

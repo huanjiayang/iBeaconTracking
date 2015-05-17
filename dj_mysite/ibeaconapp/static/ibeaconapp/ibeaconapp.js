@@ -18,8 +18,7 @@ function init(){
 		data: parameters,
 		accept: 'application/json',
 		success: function(data, responseText, jqXHR) {
-			var html = "";
-			 
+			 var html = "";
 			 for(var i=0; i<data["floorplanlist"].length; i++){
 				 html += '<option>';
 				 html += data["floorplanlist"][i];
@@ -35,19 +34,44 @@ function init(){
 
 // process floorplan selection change
 function onFloorplanChange(index){
-	rec = index;
-	 var html = '';
-	 for(var i=0; i<music_demo[index].content.length; i++){
-		 html += '<option>';
-		 html += music_demo[index].content[i];
-		 html += '</option>';
-	 }
+	 rec = index;
+	 var parameters = {};
+	 $.ajax({
+		 url:'/ibeaconapp/deployment',
+		 type:'GET',
+		 data: parameters,
+		 accept: 'application/json',
+		 success: function(data, responseText, jqXHR) {
+			 var html = "";
+			 for(var i=0; i<deployment_list[index].content.length; i++){
+			 html += '<option>';
+			 html += deployment[index].content[i];
+			 html += '</option>';
+	 		}
 	 document.getElementById("deployment_sel").innerHTML = html;
+		 },
+	 });
 }
 
 //process deployment selection change
 function onDeploymentChange(index){
-	
+	 rec = index;
+	 var parameters = {};
+	 $.ajax({
+		 url:'/ibeaconapp/deployment',
+		 type:'GET',
+		 data: parameters,
+		 accept: 'application/json',
+		 success: function(data, responseText, jqXHR) {
+			 var html = "";
+			 for(var i=0; i<deployment_list[index].content.length; i++){
+			 html += '<option>';
+			 html += deployment[index].content[i];
+			 html += '</option>';
+	 		}
+	 document.getElementById("deployment_sel").innerHTML = html;
+		 },
+	 });
 }
 
 //process dataset selection change
