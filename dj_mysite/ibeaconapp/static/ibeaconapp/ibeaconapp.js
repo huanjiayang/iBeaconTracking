@@ -57,6 +57,7 @@ function onFloorplanChange(fp_sel){
 		 failure: function(){alert('Failed to get floorplan list from server...');}
 	 });
 	 
+	 // You can display the floorplan already
 	 showFloorplan(fp_sel[fp_sel.selectedIndex].value);
 }
 
