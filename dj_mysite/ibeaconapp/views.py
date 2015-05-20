@@ -44,12 +44,17 @@ def listFloorplan(request):
     return JsonResponse(floorplan_list)
 
 def listDeployment(request):
+    fp_id = request.GET.get('floorplan_id', '')
+    # use fp_id to query database
     deployment_list =  {
 	            	          "deploymentlist":["Beethoven","Mozart","Tchaikovsky"]
 	                  }
     return JsonResponse(deployment_list)
 
 def listDataset(request):
+    fp_id = request.GET.get('floorplan_id', '')
+    dp_id= request.GET.get('deployment_id', '')
+    # use fp_id and dp_id to query database
     dataset_list = {        
                     "datasetlist":["dataset01","dataset02","dataset03"]       
                     }
