@@ -24,8 +24,8 @@ function init(){
 		success: function(data, responseText, jqXHR) {
 			 var html = "";
 			 for(var i=0; i<data["floorplanlist"].length; i++){
-				 html += '<option>';
-				 html += data["floorplanlist"][i];
+				 html += '<option value=' +data["floorplanlist"][i]["id"] + '>';
+				 html += data["floorplanlist"][i]["name"];
 				 html += '</option>';
 			 }
 			 
@@ -37,9 +37,9 @@ function init(){
 }
 
 // process floorplan selection change
-function onFloorplanChange(floorplan_id){
-	 var parameters = {"floorplan_id" : floorplan_id};
-	 current_floorplan = floorplan_id;
+function onFloorplanChange(fp_sel){
+	 var parameters = {"floorplan_id" : fp_sel[fp_sel.selectedIndex].value};
+	 current_floorplan = fp_sel[fp_sel.selectedIndex].value;
 	 $.ajax({
 		 url:'/ibeaconapp/deployment/',
 		 type:'GET',
@@ -57,7 +57,7 @@ function onFloorplanChange(floorplan_id){
 		 failure: function(){alert('Failed to get floorplan list from server...');}
 	 });
 	 
-	 showFloorplan(floorplan_id);
+	 showFloorplan(fp_sel[fp_sel.selectedIndex].value);
 }
 
 //process deployment selection change

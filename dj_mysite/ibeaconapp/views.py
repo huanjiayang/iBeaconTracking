@@ -40,7 +40,7 @@ def getdata(request):
     return JsonResponse(floorplan_list)
 
 def listFloorplan(request):
-    floorplan_list = {"floorplanlist":["Computer Science floor 3", "Computer Science floor 2","Computer Science floor 1","Computer Science floor 0"]}
+    floorplan_list = {"floorplanlist":[{"name" : "Computer Science floor 3", "id" : "01"}, {"name" : "Computer Science floor 2", "id" : "02"},{"name" : "Computer Science floor 1", "id" : "03"},{"name" : "Computer Science floor 0", "id" : "04"}]}
     return JsonResponse(floorplan_list)
 
 def listDeployment(request):
