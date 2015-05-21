@@ -107,6 +107,13 @@ function showFloorplan(floorplan_id){
 		 accept: 'application/json',
 		 success: function(data, responseText, jqXHR) {
 			 alert("the floorplan img file name is: " + data.floorplan_img);
+			 var myCanvas = document.getElementById('canvas_fp');
+			 var ctx = myCanvas.getContext('2d');
+			 var img = new Image;
+			 img.onload = function(){
+			   ctx.drawImage(img,0,0); // Or at whatever offset you like
+			 };
+			 img.src = "/static/ibeaconapp/image/"+data.floorplan_img;
 		 },
 		 failure: function(){alert('Failed to get floorplan list from server...');}
 	 });
