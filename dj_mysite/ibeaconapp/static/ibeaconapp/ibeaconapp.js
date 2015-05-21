@@ -159,7 +159,7 @@ function showFloorplan(floorplan_id){
 
 function showDeployment(floorplan_id,deployment_id){
 	// show the deployment here, you may need further AJAX calls to get the deployment details back
-	alert("showing the deployment");
+	//alert("showing the deployment");
 	var parameters = {"deployment_id" : deployment_id};
 	current_deployment = deployment_id;
 	$.ajax({
@@ -169,7 +169,19 @@ function showDeployment(floorplan_id,deployment_id){
 		accept: 'application/json',
 		success: function(data, responseText, jqXHR) {
 			// draw the beacons on the canvas
-			
+			var canvas_fp = document.getElementById("canvas_fp");
+			var ctx = canvas_fp.getContext("2d");
+			for(var i=0; i<data.beaconlist.length; i++){
+				ctx.beginPath();
+				ctx.arc(data.beaconlist[i].x,data.beaconlist[i].y,10,0,2*Math.PI);
+				ctx.stroke();
+				ctx.beginPath();
+				ctx.arc(data.beaconlist[i].x,data.beaconlist[i].y,15,0,2*Math.PI);
+				ctx.stroke();
+				ctx.beginPath();
+				ctx.arc(data.beaconlist[i].x,data.beaconlist[i].y,20,0,2*Math.PI);
+				ctx.stroke();
+			}
 		},
 	});
 }
