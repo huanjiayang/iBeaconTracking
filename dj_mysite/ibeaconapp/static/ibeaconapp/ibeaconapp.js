@@ -121,6 +121,8 @@ function onDeploymentChange(deployment_id){
 	 });
 	 
 	 // you may want to show the deployment when the user select one
+	 showFloorplan(current_floorplan);
+	 
 	 showDeployment(current_floorplan,deployment_id);
 	 
 }
