@@ -23,6 +23,7 @@ function init(){
 		accept: 'application/json',
 		success: function(data, responseText, jqXHR) {
 			 var html = "";
+			 html += "<option disabled selected> -- select a floorplan -- </option>"
 			 for(var i=0; i<data["floorplanlist"].length; i++){
 				 html += '<option value=' +data["floorplanlist"][i]["id"] + '>';
 				 html += data["floorplanlist"][i]["name"];
