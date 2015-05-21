@@ -13,8 +13,44 @@ var music_demo = [
 var current_floorplan;
 var current_deployment;
 
+
+function relMouseCoords(event){
+    var totalOffsetX = 0;
+    var totalOffsetY = 0;
+    var canvasX = 0;
+    var canvasY = 0;
+    var currentElement = this;
+
+    do{
+        totalOffsetX += currentElement.offsetLeft - currentElement.scrollLeft;
+        totalOffsetY += currentElement.offsetTop - currentElement.scrollTop;
+    }
+    while(currentElement = currentElement.offsetParent)
+
+    canvasX = event.pageX - totalOffsetX;
+    canvasY = event.pageY - totalOffsetY;
+
+    return {x:canvasX, y:canvasY}
+}
+HTMLCanvasElement.prototype.relMouseCoords = relMouseCoords;
+
+function initFpCanvas(){
+	var canvas_fp = document.getElementById("canvas_fp");
+	//Add event listener for `click` events to the floorplan canvas.
+	canvas_fp.addEventListener('click', function(event) {
+		var coords = canvas_fp.relMouseCoords(event);
+		canvasX = coords.x;
+		canvasY = coords.y;
+	
+		alert("x is: " + canvasX + "  y is: " + canvasY);
+	}, false);
+}
+
+
 // initialization of home page
 function init(){
+	initFpCanvas();
+	
 	var parameters = {};
 	$.ajax({
 		url: '/ibeaconapp/floorplan/',
