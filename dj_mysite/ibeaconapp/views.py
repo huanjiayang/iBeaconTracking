@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.http import JsonResponse
-from ibeaconapp.models import FLOORPLAN
+from ibeaconapp.models import *
 from django.core.context_processors import request
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render_to_response
@@ -14,6 +14,7 @@ import json
 import threading
 import functools
 import logging
+
 
 # Create your views here.
 
@@ -40,8 +41,17 @@ def getdata(request):
     return JsonResponse(floorplan_list)
 
 def listFloorplan(request):
-    floorplan_list = {"floorplanlist":[{"name" : "Computer Science floor 3", "id" : "01"}, {"name" : "Computer Science floor 2", "id" : "02"},{"name" : "Computer Science floor 1", "id" : "03"},{"name" : "Computer Science floor 0", "id" : "04"}]}
-    return JsonResponse(floorplan_list)
+    try:
+        floorplan_list = FLOORPLAN.objects.all()
+        print floorplan_list[0].id
+    except BaseException:
+        print BaseException.message
+    #return_list = {"floorplanlist":[{"name" : "Computer Science floor 3", "id" : "01"}, {"name" : "Computer Science floor 2", "id" : "02"},{"name" : "Computer Science floor 1", "id" : "03"},{"name" : "Computer Science floor 0", "id" : "04"}]}
+    return_list = {"floorplanlist":[]}
+    for fp in floorplan_list:
+        return_list["floorplanlist"].append({"name":fp.NAME,"id":fp.id})
+    
+    return JsonResponse(return_list)
 
 def listDeployment(request):
     fp_id = request.GET.get('floorplan_id', '')
@@ -59,4 +69,14 @@ def listDataset(request):
                     "datasetlist":["dataset01","dataset02","dataset03"]       
                     }
     return JsonResponse(dataset_list)
+
+def getfloorplanImg(request):
+    fp_id = request.GET.get("floorplan_id","")
+    try:
+        fp = FLOORPLAN.objects.get(id=fp_id)
+        print fp.FLOOR_MAP
+    except BaseException:
+        print BaseException.message
+    rps = {"floorplan_img":fp.FLOOR_MAP}
+    return JsonResponse(rps)
 
