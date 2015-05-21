@@ -75,6 +75,7 @@ function init(){
 
 // process floorplan selection change
 function onFloorplanChange(fp_sel){
+	clearDatasetSelect();
 	
 	 var parameters = {"floorplan_id" : fp_sel[fp_sel.selectedIndex].value};
 	 current_floorplan = fp_sel[fp_sel.selectedIndex].value;
@@ -102,6 +103,8 @@ function onFloorplanChange(fp_sel){
 
 //process deployment selection change
 function onDeploymentChange(deployment_id){
+	clearDatasetSelect()
+	
 	 var parameters = {"deployment_id" : deployment_id, "floorplan_id" : current_floorplan};
 	 current_deployment = deployment_id;
 	 $.ajax({
@@ -133,6 +136,11 @@ function onDatasetChange(dataset_id){
 	showDataset(current_floorplan,current_deployment,dataset_id);
 }
 
+
+function clearDatasetSelect(){
+	var ds_sel = document.getElementById("dataset_sel");
+	ds_sel.innerHTML = "";
+}
 
 function showFloorplan(floorplan_id){
 	// show the floorplan here, you may need further AJAX calls to get the floorplan details back
