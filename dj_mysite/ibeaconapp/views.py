@@ -103,3 +103,22 @@ def listBeaconsInDeployment(request):
                                           "x":beacon.CORD_X,
                                           "y":beacon.CORD_Y})
     return JsonResponse(return_list)
+
+def processDataset(request):
+    if request.method == 'POST':
+        file_name = "temp_dataset.csv"
+        path = 'ibeaconapp/static/ibeaconapp/dataset_file/%s' % file_name
+        f = request.FILES['dataset']
+        destination = open(path, 'wb+')
+        for chunk in f.chunks():
+            destination.write(chunk)
+        destination.close()
+        return JsonResponse({"status":"success"})
+    elif request.method == 'GET':
+        fp_id = request.GET.get('floorplan_id', '')
+        dp_id= request.GET.get('deployment_id', '')
+        # use fp_id and dp_id to query database
+        dataset_list = {        
+                        "datasetlist":["dataset01","dataset02","dataset03"]       
+                        }
+        return JsonResponse(dataset_list)

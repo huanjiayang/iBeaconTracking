@@ -8,5 +8,5 @@ urlpatterns = patterns('',
     url(r'floorplan/$', views.listFloorplan, name = 'listfloorplan'),
     url(r'deployment/beacons/$',views.listBeaconsInDeployment, name = 'listBeaconsInDeployment'),
     url(r'deployment/$',views.listDeployment, name = 'listdeployment'),
-    url(r'dataset/$',views.listDataset, name = 'listdataset')
+    url(r'dataset/$',views.processDataset, name = 'processDataset')
 )
