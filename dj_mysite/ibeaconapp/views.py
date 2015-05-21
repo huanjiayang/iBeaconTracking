@@ -86,3 +86,20 @@ def getfloorplanImg(request):
     rps = {"floorplan_img":fp.FLOOR_MAP}
     return JsonResponse(rps)
 
+def listBeaconsInDeployment(request):
+    dp_id= request.GET.get('deployment_id', '')
+    # use fp_id to query database
+    beacon_list = []
+    try:
+        beacon_list = BEACON_POSITION.objects.filter(DEPLOYMENT=dp_id)
+    except BaseException:
+        type, value, traceback = sys.exc_info()
+        print('Error: %s' % (value))
+    return_list =  {"beaconlist":[]}
+    for beacon in beacon_list:
+        return_list["beaconlist"].append({"beacon_id":beacon.BEACON_ID,
+                                          "beacon_mac":beacon.BEACON_MAC,
+                                          "id":beacon.id,
+                                          "x":beacon.CORD_X,
+                                          "y":beacon.CORD_Y})
+    return JsonResponse(return_list)

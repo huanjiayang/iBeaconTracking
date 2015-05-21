@@ -160,6 +160,18 @@ function showFloorplan(floorplan_id){
 function showDeployment(floorplan_id,deployment_id){
 	// show the deployment here, you may need further AJAX calls to get the deployment details back
 	alert("showing the deployment");
+	var parameters = {"deployment_id" : deployment_id};
+	current_deployment = deployment_id;
+	$.ajax({
+		url:'/ibeaconapp/deployment/beacons/',
+		type:'GET',
+		data: parameters,
+		accept: 'application/json',
+		success: function(data, responseText, jqXHR) {
+			// draw the beacons on the canvas
+			
+		},
+	});
 }
 
 function showDataset(floorplan_id,deployment_id,dataset_id){
