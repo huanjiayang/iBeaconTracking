@@ -75,7 +75,7 @@ function init(){
 
 // process floorplan selection change
 function onFloorplanChange(fp_sel){
-	/*
+	
 	 var parameters = {"floorplan_id" : fp_sel[fp_sel.selectedIndex].value};
 	 current_floorplan = fp_sel[fp_sel.selectedIndex].value;
 	 $.ajax({
@@ -84,17 +84,18 @@ function onFloorplanChange(fp_sel){
 		 data: parameters,
 		 accept: 'application/json',
 		 success: function(data, responseText, jqXHR) {
-				 var html = "";
-				 for(var i=0; i<data.deploymentlist.length; i++){
-				 html += '<option>';
-				 html += data.deploymentlist[i];
+			 var html = "";
+			 html += "<option disabled selected> -- select a deployment -- </option>"
+			 for(var i=0; i<data["deploymentlist"].length; i++){
+				 html += '<option value=' +data["deploymentlist"][i]["id"] + '>';
+				 html += data["deploymentlist"][i]["name"];
 				 html += '</option>';
 	 		}
 			 document.getElementById("deployment_sel").innerHTML = html;
 		 },
-		 failure: function(){alert('Failed to get floorplan list from server...');}
+		 failure: function(){alert('Failed to get deployment list from server...');}
 	 });
-	 */
+	 
 	 // You can display the floorplan already
 	 showFloorplan(fp_sel[fp_sel.selectedIndex].value);
 }
@@ -142,9 +143,10 @@ function showFloorplan(floorplan_id){
 		 data: parameters,
 		 accept: 'application/json',
 		 success: function(data, responseText, jqXHR) {
-			 alert("the floorplan img file name is: " + data.floorplan_img);
+			 //alert("the floorplan img file name is: " + data.floorplan_img);
 			 var myCanvas = document.getElementById('canvas_fp');
 			 var ctx = myCanvas.getContext('2d');
+			 ctx.clearRect(0, 0, myCanvas.width, myCanvas.height);
 			 var img = new Image;
 			 img.onload = function(){
 			   ctx.drawImage(img,0,0); // Or at whatever offset you like

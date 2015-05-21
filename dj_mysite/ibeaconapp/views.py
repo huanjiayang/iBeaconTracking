@@ -56,10 +56,16 @@ def listFloorplan(request):
 def listDeployment(request):
     fp_id = request.GET.get('floorplan_id', '')
     # use fp_id to query database
-    deployment_list =  {
-	            	          "deploymentlist":["Beethoven","Mozart","Tchaikovsky"]
-	                  }
-    return JsonResponse(deployment_list)
+    deployment_list = []
+    try:
+        deployment_list = DEPLOYMENT.objects.filter(FLOORPLAN=fp_id)
+    except BaseException:
+        type, value, traceback = sys.exc_info()
+        print('Error: %s' % (value))
+    return_list =  {"deploymentlist":[]}
+    for deployment in deployment_list:
+        return_list["deploymentlist"].append({"name":deployment.NAME,"id":deployment.id})
+    return JsonResponse(return_list)
 
 def listDataset(request):
     fp_id = request.GET.get('floorplan_id', '')
@@ -74,7 +80,7 @@ def getfloorplanImg(request):
     fp_id = request.GET.get("floorplan_id","")
     try:
         fp = FLOORPLAN.objects.get(id=fp_id)
-        print fp.FLOOR_MAP
+        #print fp.FLOOR_MAP
     except BaseException:
         print BaseException.message
     rps = {"floorplan_img":fp.FLOOR_MAP}
