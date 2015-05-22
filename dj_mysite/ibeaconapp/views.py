@@ -109,6 +109,8 @@ def processDataset(request):
         file_name = "temp_dataset.csv"
         path = 'ibeaconapp/static/ibeaconapp/dataset_file/%s' % file_name
         f = request.FILES['dataset']
+        deployment_id = request.POST.get("deployment_id","")
+        floorplan_id = request.POST.get("floorplan_id","")
         destination = open(path, 'wb+')
         for chunk in f.chunks():
             destination.write(chunk)

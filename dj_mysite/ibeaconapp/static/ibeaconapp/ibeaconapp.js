@@ -44,6 +44,8 @@ function initDatasetImport(){
 
 	$('#upload-file-btn').click(function() {
 	    var form_data = new FormData($('#upload-file')[0]);
+	    form_data.append("floorplan_id" , current_floorplan);
+	    form_data.append("deployment_id" , current_deployment);
 	    $.ajax({
 	        type: 'POST',
 	        url: '/ibeaconapp/dataset/',
