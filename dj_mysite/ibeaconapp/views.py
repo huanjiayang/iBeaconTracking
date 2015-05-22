@@ -14,6 +14,11 @@ import json
 import threading
 import functools
 import logging
+import csv
+import math
+import numpy
+from numpy import *
+from decimal import *
 
 
 # Create your views here.
@@ -80,7 +85,6 @@ def getfloorplanImg(request):
     fp_id = request.GET.get("floorplan_id","")
     try:
         fp = FLOORPLAN.objects.get(id=fp_id)
-        #print fp.FLOOR_MAP
     except BaseException:
         print BaseException.message
     rps = {"floorplan_img":fp.FLOOR_MAP}
@@ -105,6 +109,7 @@ def listBeaconsInDeployment(request):
     return JsonResponse(return_list)
 
 def processDataset(request):
+    print "processing dataset"
     if request.method == 'POST':
         file_name = "temp_dataset.csv"
         path = 'ibeaconapp/static/ibeaconapp/dataset_file/%s' % file_name
@@ -130,13 +135,74 @@ def processDataset(request):
     
     
 def calculateLocationHistory(floorplan_id,deployment_id):
+    print "calculateLocationHistory"
     location_history_list = []
     
-    location_history_list.append({"time":"Thu May 14 01:03:36 BST 2015","x":125,"y":130})
-    location_history_list.append({"time":"Thu May 14 01:03:37 BST 2015","x":122,"y":131})
-    location_history_list.append({"time":"Thu May 14 01:03:38 BST 2015","x":128,"y":131})
-    location_history_list.append({"time":"Thu May 14 01:03:39 BST 2015","x":134,"y":156})
-    location_history_list.append({"time":"Thu May 14 01:03:40 BST 2015","x":135,"y":153})
-    location_history_list.append({"time":"Thu May 14 01:03:41 BST 2015","x":138,"y":150})
-    
+    file_name = "temp_dataset.csv"
+    path = 'ibeaconapp/static/ibeaconapp/dataset_file/%s' % file_name
+    print "opening csv file"
+    with open(path,'rb') as loc_record_file:
+        loc_record = csv.reader(loc_record_file)
+        for record in loc_record:
+            dt = record[0]
+            sn = record[1]
+            print "processing record " + sn
+            beacons = []
+            beacons.append({"mac":record[2],"dist":convertRssiDist(record[3])})
+            beacons.append({"mac":record[4],"dist":convertRssiDist(record[5])})
+            beacons.append({"mac":record[6],"dist":convertRssiDist(record[7])})
+            loc = calculateLocation(floorplan_id, deployment_id,beacons)
+            if loc["calculated"] is True:
+                location_history_list.append({"time":dt,"sn":sn,"x":loc["x"],"y":loc["y"]})
+            
     return location_history_list
+
+
+def calculateLocation(floorplan_id, deployment_id,beacons):
+    ranging_list = []
+    location = {}
+    for beacon in beacons:
+        try:
+            b = BEACON_POSITION.objects.get(DEPLOYMENT=deployment_id,BEACON_MAC=beacon["mac"])
+            ranging_list.append({'x':int(b.CORD_X),"y":int(b.CORD_Y),'ranging':beacon["dist"]})
+            location = calRssiLocation(ranging_list)
+            location["calculated"] = True 
+        except Exception:
+            location["calculated"] = False
+    
+    return location
+ 
+ 
+def calRssiLocation(ranging_list):
+    x0 = calTwoBeacon(ranging_list[0],ranging_list[1],"x")
+    x1 = calTwoBeacon(ranging_list[0],ranging_list[2],"x")
+    x2 = calTwoBeacon(ranging_list[1],ranging_list[2],"x")
+    x = x0+x1+x2
+    x = x / 3
+       
+    y0 = calTwoBeacon(ranging_list[0],ranging_list[1],"y")
+    y1 = calTwoBeacon(ranging_list[0],ranging_list[2],"y")
+    y2 = calTwoBeacon(ranging_list[1],ranging_list[2],"y")
+    y = y0+y1+y2
+    y = y / 3    
+    
+    return {'x':x,'y':y}
+         
+
+def calTwoBeacon(b1,b2,cord):
+    if(b1[cord]>b2[cord]):
+        b = b1[cord]
+        a = b2[cord]
+        x = a + (b - a) * (b2["ranging"] / ((b1["ranging"]+b2["ranging"])))
+    else:
+        a = b1[cord]
+        b = b2[cord]
+        x = a + (b - a) * (b1["ranging"] / ((b1["ranging"]+b2["ranging"])))
+    return x
+
+def convertRssiDist(rssi):
+    rssi = int(rssi)
+    a = -60
+    n = 3
+    d = 10**((rssi - a)/((-10)*n))
+    return d
