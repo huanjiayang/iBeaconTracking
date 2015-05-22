@@ -155,7 +155,7 @@ function onFloorplanChange(fp_sel){
 	 });
 	 
 	 // You can display the floorplan already
-	 showFloorplan(fp_sel[fp_sel.selectedIndex].value);
+	 showFloorplan(fp_sel[fp_sel.selectedIndex].value,false);
 }
 
 //process deployment selection change
@@ -181,9 +181,9 @@ function onDeploymentChange(deployment_id){
 	 });
 	 
 	 // you may want to show the deployment when the user select one
-	 showFloorplan(current_floorplan)
+	 showFloorplan(current_floorplan,true)
 	 
-	 showDeployment(current_floorplan,deployment_id);
+	 
 	 
 }
 
@@ -199,7 +199,7 @@ function clearDatasetSelect(){
 	ds_sel.innerHTML = "";
 }
 
-function showFloorplan(floorplan_id){
+function showFloorplan(floorplan_id,show_deployment){
 	// show the floorplan here, you may need further AJAX calls to get the floorplan details back
 	//alert("showing the floorplan");
 	 var parameters = {"floorplan_id" : floorplan_id};
@@ -219,6 +219,8 @@ function showFloorplan(floorplan_id){
 			   ctx.drawImage(img,0,0); // Or at whatever offset you like
 			 };
 			 img.src = "/static/ibeaconapp/image/"+data.floorplan_img;
+			 if(show_deployment)
+				 showDeployment(floorplan_id,current_deployment)
 		 },
 		 failure: function(){alert('Failed to get floorplan list from server...');}
 	 });
