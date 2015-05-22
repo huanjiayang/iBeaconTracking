@@ -115,12 +115,28 @@ def processDataset(request):
         for chunk in f.chunks():
             destination.write(chunk)
         destination.close()
-        return JsonResponse({"status":"success"})
+        
+        location_history_list = calculateLocationHistory(floorplan_id,deployment_id)
+        return_list = {"location_history_list" : location_history_list}
+        #return JsonResponse(return_list)
     elif request.method == 'GET':
         fp_id = request.GET.get('floorplan_id', '')
         dp_id= request.GET.get('deployment_id', '')
         # use fp_id and dp_id to query database
-        dataset_list = {        
+        return_list = {        
                         "datasetlist":["dataset01","dataset02","dataset03"]       
                         }
-        return JsonResponse(dataset_list)
+    return JsonResponse(return_list)
+    
+    
+def calculateLocationHistory(floorplan_id,deployment_id):
+    location_history_list = []
+    
+    location_history_list.append({"time":"Thu May 14 01:03:36 BST 2015","x":125,"y":130})
+    location_history_list.append({"time":"Thu May 14 01:03:37 BST 2015","x":122,"y":131})
+    location_history_list.append({"time":"Thu May 14 01:03:38 BST 2015","x":128,"y":131})
+    location_history_list.append({"time":"Thu May 14 01:03:39 BST 2015","x":134,"y":156})
+    location_history_list.append({"time":"Thu May 14 01:03:40 BST 2015","x":135,"y":153})
+    location_history_list.append({"time":"Thu May 14 01:03:41 BST 2015","x":138,"y":150})
+    
+    return location_history_list

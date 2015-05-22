@@ -13,7 +13,6 @@ var music_demo = [
 var current_floorplan;
 var current_deployment;
 
-
 function getCookie(name) {
     var cookieValue = null;
     if (document.cookie && document.cookie != '') {
@@ -56,7 +55,16 @@ function initDatasetImport(){
 	        async: false,
 	        success: function(data) {
 	            alert('Success!');
+	            var canvas_fp = document.getElementById("canvas_fp");
+				var ctx = canvas_fp.getContext("2d");
+				for(var i=0; i<data["location_history_list"].length; i++){
+					ctx.beginPath();
+					ctx.arc(data.location_history_list[i].x,data.location_history_list[i].y,2,0,2*Math.PI);
+					ctx.stroke();
+				}
+	            
 	        },
+	        failure: function(){alert('Failed to get location history list calculated from server...');}
 	    });
 	});
 
@@ -173,7 +181,7 @@ function onDeploymentChange(deployment_id){
 	 });
 	 
 	 // you may want to show the deployment when the user select one
-	 showFloorplan(current_floorplan);
+	 showFloorplan(current_floorplan)
 	 
 	 showDeployment(current_floorplan,deployment_id);
 	 
