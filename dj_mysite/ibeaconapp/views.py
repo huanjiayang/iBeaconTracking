@@ -75,10 +75,22 @@ def listDeployment(request):
 def listDataset(request):
     fp_id = request.GET.get('floorplan_id', '')
     dp_id= request.GET.get('deployment_id', '')
+
     # use fp_id and dp_id to query database
-    dataset_list = {        
-                    "datasetlist":["dataset01","dataset02","dataset03"]       
-                    }
+    dataset_list = []
+    try:
+        dataset_list = DATASET.object.all()
+    except BaseException:
+        print BaseException.message
+    return_list = {"datasetlist":[]}
+    for dataset in dataset_list:
+        return_list["datasetlist"].append({"name":dataset.NAME,"id":dataset.id})
+    
+    #dataset_list = {        
+    #                "datasetlist":["dataset01","dataset02","dataset03"]       
+    #                }
+                    
+    
     return JsonResponse(dataset_list)
 
 def getfloorplanImg(request):
@@ -154,8 +166,15 @@ def calculateLocationHistory(floorplan_id,deployment_id):
             loc = calculateLocation(floorplan_id, deployment_id,beacons)
             if loc["calculated"] is True:
                 location_history_list.append({"time":dt,"sn":sn,"x":loc["x"],"y":loc["y"]})
-            
+    rssi2xy(location_history_list)        
     return location_history_list
+
+def rssi2xy(location_history_list):
+    print "rssi2xy"
+    with open('rssi2xy.csv', 'wb') as csvfile:
+        for location_history in location_history_list :
+            xywriter = csv.writer(csvfile, dialect='excel')
+            xywriter.writerow([location_history["time"], location_history["sn"], location_history["x"], location_history["y"]])    
 
 
 def calculateLocation(floorplan_id, deployment_id,beacons):

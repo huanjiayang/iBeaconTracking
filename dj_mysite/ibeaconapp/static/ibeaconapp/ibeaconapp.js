@@ -38,9 +38,8 @@ $.ajaxSetup({
     }
 });
 
-
+//draw the rssi displaying in canvas
 function initDatasetImport(){
-
 	$('#upload-file-btn').click(function() {
 	    var form_data = new FormData($('#upload-file')[0]);
 	    form_data.append("floorplan_id" , current_floorplan);
@@ -61,13 +60,11 @@ function initDatasetImport(){
 					ctx.beginPath();
 					ctx.arc(data.location_history_list[i].x,data.location_history_list[i].y,2,0,2*Math.PI);
 					ctx.stroke();
-				}
-	            
+				}   
 	        },
 	        failure: function(){alert('Failed to get location history list calculated from server...');}
 	    });
 	});
-
 }
 
 
