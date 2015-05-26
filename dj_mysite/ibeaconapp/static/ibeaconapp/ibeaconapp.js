@@ -159,8 +159,10 @@ function onFloorplanChange(fp_sel){
 }
 
 //process deployment selection change
-function onDeploymentChange(deployment_id){
+function onDeploymentChange(dp_sel){
 	clearDatasetSelect()
+	
+	deployment_id = dp_sel[dp_sel.selectedIndex].value;
 	
 	 var parameters = {"deployment_id" : deployment_id, "floorplan_id" : current_floorplan};
 	 current_deployment = deployment_id;
