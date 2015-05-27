@@ -3,9 +3,11 @@
 		<title>iBeacon Localization tool</title>
 		<script type="text/javascript" src='/static/ibeaconapp/jquery-1.11.1.min.js'></script>
 		<script type="text/javascript" src='/static/ibeaconapp/ibeaconapp.js'></script>
+		<script type="text/javascript" src='/static/ibeaconapp/jquery.nstSlider.min.js'></script>
 
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+		<link rel="stylesheet" href="/static/ibeaconapp/jquery.nstSlider.min.css">
 		
 		<style type="text/css">
 		#admin_iframe{
@@ -17,6 +19,8 @@
 		}
 		
 		</style>
+		
+		
 		
 	</head>
     
@@ -57,6 +61,16 @@
 	
 
 	</script>
+	
+	<div class="nstSlider" data-range_min="-10" data-range_max="100" 
+                       data-cur_min="20"    data-cur_max="80">
+
+	    <div class="bar"></div>
+	    <div class="leftGrip"></div>
+	    <div class="rightGrip"></div>
+	</div>
+	<div class="leftLabel" />
+	<div class="rightLabel" />
 	
 	
 	</body>
