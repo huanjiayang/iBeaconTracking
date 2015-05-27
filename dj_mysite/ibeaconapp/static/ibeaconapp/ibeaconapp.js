@@ -12,6 +12,7 @@ var music_demo = [
 
 var current_floorplan;
 var current_deployment;
+var loc_history;
 
 function getCookie(name) {
     var cookieValue = null;
@@ -56,6 +57,7 @@ function initDatasetImport(){
 	            alert('Success!');
 	            var canvas_fp = document.getElementById("canvas_fp");
 				var ctx = canvas_fp.getContext("2d");
+				loc_history = data["location_history_list"];
 				for(var i=0; i<data["location_history_list"].length; i++){
 					ctx.beginPath();
 					ctx.arc(data.location_history_list[i].x,data.location_history_list[i].y,2,0,2*Math.PI);
