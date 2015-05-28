@@ -13,6 +13,8 @@ var music_demo = [
 var current_floorplan;
 var current_deployment;
 var loc_history;
+var sliderleftvalue;
+var sliderrightvalue;
 
 function getCookie(name) {
     var cookieValue = null;
@@ -67,6 +69,16 @@ function initDatasetImport(){
 	        failure: function(){alert('Failed to get location history list calculated from server...');}
 	    });
 	});
+	/*
+	$('#download-file-btn').click(function() {
+		$.ajax({
+			url: '/ibeaconapp/exportcsv/',
+			type: 'GET',
+	        success: function(data) {
+	            alert('Success!');
+	        }
+		})
+	})*/
 }
 
 
@@ -111,8 +123,37 @@ function initSlider(){
         "value_changed_callback": function(cause, leftValue, rightValue) {
             $(this).parent().find('.leftLabel').text(leftValue);
             $(this).parent().find('.rightLabel').text(rightValue);
+            sliderleftvalue=leftValue;
+            sliderrightvalue=rightValue;
         }
     });
+    
+    
+    
+    
+    /*
+	$('#update-time-btn').click(function() {
+	    //var form_data = new FormData($('#upload-file')[0]);
+	    form_data.append("floorplan_id" , current_floorplan);
+	    form_data.append("deployment_id" , current_deployment);
+        
+        var canvas_fp = document.getElementById("canvas_fp");
+		var ctx = canvas_fp.getContext("2d");
+		data["location_history_list"] = loc_history;
+		start_time = data["location_history_list"].length*parseInt(sliderleftvalue+"%")
+		end_time = data["location_history_list"].length*parse(sliderrightvalue+"%")
+		for(var i=start_time; i<end_time; i++){
+			ctx.beginPath();
+			ctx.arc(data.location_history_list[i].x,data.location_history_list[i].y,2,0,2*Math.PI);
+			ctx.stroke();
+				}   
+		alert('Successfully updated!');    
+
+	    });
+	});
+	*/
+	
+	
 }
 
 // initialization of home page
@@ -273,3 +314,4 @@ function showDataset(floorplan_id,deployment_id,dataset_id){
 	// show the dataset here, you may need further AJAX calls to get the dataset details back
 	alert("showing the dataset");
 }
+

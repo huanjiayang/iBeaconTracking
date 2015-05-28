@@ -12,8 +12,8 @@
 		<style type="text/css">
 		#admin_iframe{
 			position:fixed;
-			left : 600px;
-			top: 220px;
+			left : 550px;
+			top: 200px;
 			width : 800px;
 			height: 600px;
 		}
@@ -45,7 +45,10 @@
 		  {% csrf_token %}
 		  <button type="button" id="upload-file-btn" class="btn btn-default">Import Record</button>
 		</form>
-		
+		<form>
+			 <!-- button type="button" id="download-file-btn" class="btn btn-default-download">download</button-->
+			 <a href=http://127.0.0.1:8000/ibeaconapp/exportcsv>download csv</a>
+		</form>
 		
 	
 	</div>
@@ -57,20 +60,31 @@
 	<iframe id="admin_iframe" src="http://127.0.0.1:8000/admin/"></iframe>
 	
 	
-	<script type="text/javascript">
+	<script type="text/javascript">	</script>
 	
-
-	</script>
-	
-	<div class="nstSlider" data-range_min="-10" data-range_max="100" 
+	<div class="nstSlider" data-range_min="0" data-range_max="100" 
                        data-cur_min="20"    data-cur_max="80">
 
 	    <div class="bar"></div>
 	    <div class="leftGrip"></div>
 	    <div class="rightGrip"></div>
 	</div>
-	<div class="leftLabel" />
-	<div class="rightLabel" />
+	
+	<div class="leftLabel" ></div>
+	<div class="rightLabel"></div>
+	<!-- div class="leftLabel" />
+	<div class="rightLabel"/-->
+	
+	
+	
+	
+	<form>
+		 <button type="button" id="update-time-btn" class="btn btn-default-time">update this period</button>
+	</form>
+	
+	
+	
+	
 	
 	
 	</body>

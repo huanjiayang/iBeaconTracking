@@ -19,6 +19,10 @@ import math
 import numpy
 from numpy import *
 from decimal import *
+import urllib
+import urllib2
+
+from django.core.servers.basehttp import FileWrapper
 
 
 # Create your views here.
@@ -176,6 +180,10 @@ def rssi2xy(location_history_list):
             xywriter = csv.writer(csvfile, dialect='excel')
             xywriter.writerow([location_history["time"], location_history["sn"], location_history["x"], location_history["y"]])    
 
+def exportcsv(request):
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="rssi2xy.csv"'
+    return response
 
 def calculateLocation(floorplan_id, deployment_id,beacons):
     ranging_list = []
