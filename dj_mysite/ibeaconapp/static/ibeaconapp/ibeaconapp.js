@@ -15,6 +15,8 @@ var current_deployment;
 var loc_history;
 var sliderleftvalue;
 var sliderrightvalue;
+var currentfloorplan;
+var currentdeployment;
 
 function getCookie(name) {
     var cookieValue = null;
@@ -82,9 +84,11 @@ function initDatasetImport(){
 	*/
 }
 function clean(){
-	var canvas_fp = document.getElementById("canvas_fp");
-	var ctx = canvas_fp.getContext("2d");
-    ctx.clearRect(0,0,canvas_fp.width,canvas_fp.height);
+	//var canvas_fp = document.getElementById("canvas_fp");
+	//var ctx = canvas_fp.getContext("2d");
+    //ctx.clearRect(0,0,canvas_fp.width,canvas_fp.height);
+    onFloorplanChange(currentfloorplan);
+    onDeploymentChange(currentdeployment);
 }
 
 
@@ -182,6 +186,10 @@ function init(){
 
 // process floorplan selection change
 function onFloorplanChange(fp_sel){
+	
+	currentfloorplan=fp_sel;
+	
+	
 	clearDatasetSelect();
 	
 	 var parameters = {"floorplan_id" : fp_sel[fp_sel.selectedIndex].value};
@@ -210,6 +218,8 @@ function onFloorplanChange(fp_sel){
 
 //process deployment selection change
 function onDeploymentChange(dp_sel){
+	currentdeployment=dp_sel;
+	
 	clearDatasetSelect()
 	
 	deployment_id = dp_sel[dp_sel.selectedIndex].value;
@@ -233,7 +243,7 @@ function onDeploymentChange(dp_sel){
 	 });
 	 
 	 // you may want to show the deployment when the user select one
-	 //showFloorplan(current_floorplan,true)
+	 showFloorplan(current_floorplan,true)
 	 
 	 
 	 
@@ -268,7 +278,7 @@ function showFloorplan(floorplan_id,show_deployment){
 			 ctx.clearRect(0, 0, myCanvas.width, myCanvas.height);
 			 var img = new Image;
 			 img.onload = function(){
-			   ctx.drawImage(img,0,0); // Or at whatever offset you like
+				 ctx.drawImage(img,0,0); // Or at whatever offset you like
 			 };
 			 img.src = "/static/ibeaconapp/image/"+data.floorplan_img;
 			 if(show_deployment)
