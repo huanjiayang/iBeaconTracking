@@ -17,6 +17,8 @@ var sliderleftvalue;
 var sliderrightvalue;
 var currentfloorplan;
 var currentdeployment;
+//var start_date;
+//var end_date;
 
 function getCookie(name) {
     var cookieValue = null;
@@ -148,11 +150,18 @@ function initSlider(){
 		var data = loc_history;
 		var start_time = Math.round(data.length*sliderleftvalue/100);
 		var end_time = Math.round(data.length*sliderrightvalue/100);
+		//start_date=data.[start_time];
+		//end_date=data.[end_time];
 		for(var i=start_time; i<end_time; i++){
 			ctx.beginPath();
 			ctx.arc(data[i].x,data[i].y,2,0,2*Math.PI);
 			ctx.stroke();
 				}   
+		//document.getElementById("starttime").value= data.[start_time];
+		//document.getElementById("endtime").value= data.[end_time];
+		//html += '	<span id="starttime" />	<span id="endtime" />'
+		document.getElementById('starttime').innerHTML=data[start_time].time;
+		document.getElementById('endtime').innerHTML=data[end_time].time;
 		alert('Successfully updated!');    
 	    })
 }
