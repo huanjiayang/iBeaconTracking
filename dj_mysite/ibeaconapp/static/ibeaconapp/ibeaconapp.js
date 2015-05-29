@@ -1,4 +1,4 @@
-var music_demo = [ 
+/*var music_demo = [ 
 	              {
 	            	  type:'classical',
 	            	  content:["Beethoven","Mozart","Tchaikovsky"]
@@ -7,7 +7,7 @@ var music_demo = [
 	            	  type:'pop',
 	            	  content:["Beatles!!!","Corrs","Fleetwood Mac","Status Quo"]
 	              }
-	         ]
+	         ]*/
 
 
 var current_floorplan;
@@ -70,15 +70,21 @@ function initDatasetImport(){
 	    });
 	});
 	/*
-	$('#download-file-btn').click(function() {
+	$('#clearcanvas').click(function() {
 		$.ajax({
-			url: '/ibeaconapp/exportcsv/',
-			type: 'GET',
+			type: 'POST',
 	        success: function(data) {
+	        	ctx.clearRect ( 0 , 0 , canvas_fp.width, canvas_fp.height );
 	            alert('Success!');
 	        }
 		})
-	})*/
+	})
+	*/
+}
+function clean(){
+	var canvas_fp = document.getElementById("canvas_fp");
+	var ctx = canvas_fp.getContext("2d");
+    ctx.clearRect(0,0,canvas_fp.width,canvas_fp.height);
 }
 
 
@@ -128,32 +134,23 @@ function initSlider(){
         }
     });
     
-    
-    
-    
-    /*
 	$('#update-time-btn').click(function() {
 	    //var form_data = new FormData($('#upload-file')[0]);
-	    form_data.append("floorplan_id" , current_floorplan);
-	    form_data.append("deployment_id" , current_deployment);
+	    //form_data.append("floorplan_id" , current_floorplan);
+	    //form_data.append("deployment_id" , current_deployment);
         
         var canvas_fp = document.getElementById("canvas_fp");
 		var ctx = canvas_fp.getContext("2d");
-		data["location_history_list"] = loc_history;
-		start_time = data["location_history_list"].length*parseInt(sliderleftvalue+"%")
-		end_time = data["location_history_list"].length*parse(sliderrightvalue+"%")
+		var data = loc_history;
+		var start_time = Math.round(data.length*sliderleftvalue/100);
+		var end_time = Math.round(data.length*sliderrightvalue/100);
 		for(var i=start_time; i<end_time; i++){
 			ctx.beginPath();
-			ctx.arc(data.location_history_list[i].x,data.location_history_list[i].y,2,0,2*Math.PI);
+			ctx.arc(data[i].x,data[i].y,2,0,2*Math.PI);
 			ctx.stroke();
 				}   
 		alert('Successfully updated!');    
-
-	    });
-	});
-	*/
-	
-	
+	    })
 }
 
 // initialization of home page
@@ -236,7 +233,7 @@ function onDeploymentChange(dp_sel){
 	 });
 	 
 	 // you may want to show the deployment when the user select one
-	 showFloorplan(current_floorplan,true)
+	 //showFloorplan(current_floorplan,true)
 	 
 	 
 	 
