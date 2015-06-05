@@ -163,7 +163,37 @@ function initSlider(){
 		document.getElementById('starttime').innerHTML=data[start_time].time;
 		document.getElementById('endtime').innerHTML=data[end_time].time;
 		alert('Successfully updated!');    
-	    })
+	})
+}
+
+function getInput(){
+	$('#update-area-btn').click(function() {
+		var fx = document.getElementById('fx');
+		var fy = document.getElementById('fy');
+		var sx = document.getElementById('sx');
+		var sy = document.getElementById('sy');
+		var data = loc_history;
+		var i = 0;
+		for(i ; i < data.length; i++){
+			if (data[i].x > fx && data[i].y > fy && data[i].x < sx && data[i].y < sy) {
+				//html += '<div id="starttime' + i + '></div>'
+				//html += '<div id="endtime"></div><br>'
+				//document.getElementById('starttime').innerHTML=data[start_time].time;
+				//document.getElementById('endtime').innerHTML=data[end_time].time;
+				document.getElementById('starttime1').innerHTML=data[i].time;
+				//document.getElementById('endtime1').innerHTML=data[i].time;	
+				var m = i;
+				i = data.length;
+			}
+		}
+		for(m ; m < data.length; m++){
+			if (data[m].x < fx || data[m].y < fy || data[m].x < sx || data[m].y < sy) {
+				document.getElementById('endtime1').innerHTML=data[m].time;
+				m = data.length;
+			}
+		}
+		alert('Successfully updated!');  
+	})
 }
 
 // initialization of home page
@@ -171,6 +201,7 @@ function init(){
 	initFpCanvas();
 	initDatasetImport();
 	initSlider();
+	getInput();
 	var parameters = {};
 	$.ajax({
 		url: '/ibeaconapp/floorplan/',
