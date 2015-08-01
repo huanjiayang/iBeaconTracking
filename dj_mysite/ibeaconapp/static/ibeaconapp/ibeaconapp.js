@@ -68,7 +68,8 @@ function initDatasetImport(){
 					ctx.beginPath();
 					ctx.arc(data.location_history_list[i].x,data.location_history_list[i].y,2,0,2*Math.PI);
 					ctx.stroke();
-				}   
+				}
+				enableExportFile();
 	        },
 	        failure: function(){alert('Failed to get location history list calculated from server...');}
 	    });
@@ -85,6 +86,33 @@ function initDatasetImport(){
 	})
 	*/
 }
+
+
+function enableExportFile(){
+	document.getElementById("export-file-btn").disabled = false;
+	$('#export-file-btn').click(function() {
+		
+		var data = loc_history;
+		var csvContent = "data:text/csv;charset=utf-8,";
+		data.forEach(function(infoArray, index){
+
+		   dataString = infoArray["time"]+","+infoArray["x"]+","+infoArray["y"]
+		   csvContent += dataString + "\n";
+
+		});
+		
+		var encodedUri = encodeURI(csvContent);
+		//window.open(encodedUri);
+		var link = document.createElement("a");
+		link.setAttribute("href", encodedUri);
+		link.setAttribute("download", "my_data.csv");
+
+		link.click();
+		
+	});
+}
+
+
 function clean(){
 	//var canvas_fp = document.getElementById("canvas_fp");
 	//var ctx = canvas_fp.getContext("2d");
