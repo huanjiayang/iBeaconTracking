@@ -61,15 +61,10 @@ function initDatasetImport(){
 	        async: false,
 	        success: function(data) {
 	            alert('Success!');
-	            var canvas_fp = document.getElementById("canvas_fp");
-				var ctx = canvas_fp.getContext("2d");
-				loc_history = data["location_history_list"];
-				for(var i=0; i<data["location_history_list"].length; i++){
-					ctx.beginPath();
-					ctx.arc(data.location_history_list[i].x,data.location_history_list[i].y,2,0,2*Math.PI);
-					ctx.stroke();
-				}
+	            loc_history = data["location_history_list"];
+	            drawResultOnCanvas(data["location_history_list"]);
 				enableExportFile();
+				enableZoneRestriction();
 	        },
 	        failure: function(){alert('Failed to get location history list calculated from server...');}
 	    });
@@ -87,6 +82,26 @@ function initDatasetImport(){
 	*/
 }
 
+
+
+function drawResultOnCanvas(data){
+    var canvas_fp = document.getElementById("canvas_fp");
+	var ctx = canvas_fp.getContext("2d");
+	for(var i=0; i<data.length; i++){
+		ctx.beginPath();
+		ctx.arc(data[i].x,data[i].y,2,0,2*Math.PI);
+		ctx.stroke();
+	}
+}
+
+
+function enableZoneRestriction(){
+	document.getElementById("update_zone_btn").disabled = false;
+}
+
+function disableZoneRestriction(){
+	document.getElementById("update_zone_btn").disabled = true;
+}
 
 function enableExportFile(){
 	document.getElementById("export-file-btn").disabled = false;
@@ -113,12 +128,13 @@ function enableExportFile(){
 }
 
 
-function clean(){
+function cleanResultOnCanvas(){
 	//var canvas_fp = document.getElementById("canvas_fp");
 	//var ctx = canvas_fp.getContext("2d");
     //ctx.clearRect(0,0,canvas_fp.width,canvas_fp.height);
-    onFloorplanChange(currentfloorplan);
-    onDeploymentChange(currentdeployment);
+    //onFloorplanChange(currentfloorplan);
+    //onDeploymentChange(currentdeployment);
+	showFloorplan(current_floorplan,true);
 }
 
 
@@ -194,34 +210,135 @@ function initSlider(){
 	})
 }
 
-function getInput(){
-	$('#update-area-btn').click(function() {
-		var fx = document.getElementById('fx');
-		var fy = document.getElementById('fy');
-		var sx = document.getElementById('sx');
-		var sy = document.getElementById('sy');
-		var data = loc_history;
-		var i = 0;
-		for(i ; i < data.length; i++){
-			if (data[i].x > fx && data[i].y > fy && data[i].x < sx && data[i].y < sy) {
-				//html += '<div id="starttime' + i + '></div>'
-				//html += '<div id="endtime"></div><br>'
-				//document.getElementById('starttime').innerHTML=data[start_time].time;
-				//document.getElementById('endtime').innerHTML=data[end_time].time;
-				document.getElementById('starttime1').innerHTML=data[i].time;
-				//document.getElementById('endtime1').innerHTML=data[i].time;	
-				var m = i;
-				i = data.length;
+function initZoneRestrictionButton(){
+	$('#update_zone_btn').click(function() {
+		
+		zone_info = getZoneInfo();
+		var tl_x = Number(zone_info['tl_x']);
+		var tl_y = Number(zone_info['tl_y']);
+		var br_x = Number(zone_info['br_x']);
+		var br_y = Number(zone_info['br_y']);
+
+		zone_data = [];
+		for(rec in loc_history){
+			alert(rec["x"] + '>' + tl_x +' &&' + rec.y +'>'+ tl_y+' &&'+ rec.x+' <'+ br_x+' &&'+ rec.y +'<'+ br_y);
+			if (rec.x > zone_info['tl_x'] && rec.y > zone_info['tl_y'] && rec.x < zone_info['br_x'] && rec.y < zone_info['br_y']) {
+			//if(true){
+				alert("one match");
+				zone_data.push(rec);
 			}
 		}
-		for(m ; m < data.length; m++){
-			if (data[m].x < fx || data[m].y < fy || data[m].x < sx || data[m].y < sy) {
-				document.getElementById('endtime1').innerHTML=data[m].time;
-				m = data.length;
-			}
-		}
-		alert('Successfully updated!');  
-	})
+		UpdateResultOnCanvase(zone_data);
+		alert('Successfully updated!');
+	});
+}
+
+
+function updateResultWithZone(){
+	
+	var zone_sel = document.getElementById("zone_sel");
+	var zone_id = zone_sel[zone_sel.selectedIndex].value;
+	 $.ajax({
+		 url:'/ibeaconapp/zone/'+zone_id+'/',
+		 type:'GET',
+		 accept: 'application/json',
+		 success: function(data, responseText, jqXHR) {
+				var tl_x = parseInt(data['tl_x']);
+				var tl_y = parseInt(data['tl_y']);
+				var br_x = parseInt(data['br_x']);
+				var br_y = parseInt(data['br_y']);
+				zone_data = [];
+				for(var i=0; i<loc_history.length; i++){
+					if (loc_history[i].x > tl_x && loc_history[i].y > tl_y && loc_history[i].x < br_x && loc_history[i].y < br_y) {
+						zone_data.push(loc_history[i]);
+					}
+				}
+				UpdateResultOnCanvase(zone_data);
+				alert('Successfully updated!');
+		 },
+		 failure: function(){alert('Failed to get zone info from server...');return {};}
+	 });
+
+}
+
+
+// update the canvas with new result, AJAX calls were duplicated to make sure the order of drawing
+// floorplan, deployment and then result
+function UpdateResultOnCanvase(zone_data){
+	
+	 var parameters = {"floorplan_id" : current_floorplan};
+	 //current_floorplan = fp_sel[fp_sel.selectedIndex].value;
+	 $.ajax({
+		 url:'/ibeaconapp/floorplan/img/',
+		 type:'GET',
+		 data: parameters,
+		 accept: 'application/json',
+		 success: function(data, responseText, jqXHR) {
+			 //alert("the floorplan img file name is: " + data.floorplan_img);
+			 var myCanvas = document.getElementById('canvas_fp');
+			 var ctx = myCanvas.getContext('2d');
+			 ctx.clearRect(0, 0, myCanvas.width, myCanvas.height);
+			 var img = new Image;
+			 img.onload = function(){
+				 ctx.drawImage(img,0,0); // Or at whatever offset you like
+			 };
+			 img.src = "/static/ibeaconapp/image/"+data.floorplan_img;
+			 
+
+			var parameters = {"deployment_id" : current_deployment};
+			current_deployment = deployment_id;
+			$.ajax({
+				url:'/ibeaconapp/deployment/beacons/',
+				type:'GET',
+				data: parameters,
+				accept: 'application/json',
+				success: function(data, responseText, jqXHR) {
+					// draw the beacons on the canvas
+					var canvas_fp = document.getElementById("canvas_fp");
+					var ctx = canvas_fp.getContext("2d");
+					for(var i=0; i<data.beaconlist.length; i++){
+						ctx.beginPath();
+						ctx.arc(data.beaconlist[i].x,data.beaconlist[i].y,10,0,2*Math.PI);
+						ctx.stroke();
+						ctx.beginPath();
+						ctx.arc(data.beaconlist[i].x,data.beaconlist[i].y,15,0,2*Math.PI);
+						ctx.stroke();
+						ctx.beginPath();
+						ctx.arc(data.beaconlist[i].x,data.beaconlist[i].y,20,0,2*Math.PI);
+						ctx.stroke();
+					}
+					
+					
+					drawResultOnCanvas(zone_data);
+					
+				},
+			});
+
+			 
+		 },
+		 failure: function(){alert('Failed to get floorplan list from server...');}
+	 });
+	
+	
+}
+
+
+// get the information such as the cords of the top left and bottom right points of a zone
+function getZoneInfo(){
+	var zone_sel = document.getElementById("zone_sel");
+	var zone_id = zone_sel[zone_sel.selectedIndex].value;
+	var rtn_data = {};
+	 $.ajax({
+		 url:'/ibeaconapp/zone/'+zone_id+'/',
+		 type:'GET',
+		 accept: 'application/json',
+		 success: function(data, responseText, jqXHR) {
+			 for (attr in data)
+				 rtn_data[attr]=data[attr];
+		 },
+		 failure: function(){alert('Failed to get zone info from server...');return {};}
+	 });
+	 return rtn_data;
 }
 
 // initialization of home page
@@ -229,7 +346,7 @@ function init(){
 	initFpCanvas();
 	initDatasetImport();
 	initSlider();
-	getInput();
+	//initZoneRestrictionButton();
 	var parameters = {};
 	$.ajax({
 		url: '/ibeaconapp/floorplan/',
@@ -276,6 +393,11 @@ function onFloorplanChange(fp_sel){
 				 html += '</option>';
 	 		}
 			 document.getElementById("deployment_sel").innerHTML = html;
+			 // No zone restriction function until a dataset is selected or calculated
+			 disableZoneRestriction();
+			 //get list of zones available for this floorplan
+			 getZone(current_floorplan);
+			 
 		 },
 		 failure: function(){alert('Failed to get deployment list from server...');}
 	 });
@@ -283,6 +405,29 @@ function onFloorplanChange(fp_sel){
 	 // You can display the floorplan already
 	 showFloorplan(fp_sel[fp_sel.selectedIndex].value,false);
 }
+
+
+//get a list of zones associated with the floorplan with id fp_id
+function getZone(fp_id){
+	 $.ajax({
+		 url:'/ibeaconapp/floorplan/'+fp_id+'/zone/',
+		 type:'GET',
+		 accept: 'application/json',
+		 success: function(data, responseText, jqXHR) {
+			 var html = "";
+			 html += "<option disabled selected> -- select a zone -- </option>"
+			 for(var i=0; i<data["zone_list"].length; i++){
+				 html += '<option value=' +data["zone_list"][i]["zone_id"] + '>';
+				 html += data["zone_list"][i]["zone_no"]+"__"+data["zone_list"][i]["note"];
+				 html += '</option>';
+	 		}
+			 document.getElementById("zone_sel").innerHTML = html;
+			 
+		 },
+		 failure: function(){alert('Failed to get deployment list from server...');}
+	 });
+}
+
 
 //process deployment selection change
 function onDeploymentChange(dp_sel){
@@ -381,6 +526,7 @@ function showDeployment(floorplan_id,deployment_id){
 				ctx.arc(data.beaconlist[i].x,data.beaconlist[i].y,20,0,2*Math.PI);
 				ctx.stroke();
 			}
+			
 		},
 	});
 }

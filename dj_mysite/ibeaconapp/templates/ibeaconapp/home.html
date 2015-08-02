@@ -74,7 +74,7 @@
 			</canvas> 
 		</div>
 		<div>
-			<button onclick="clean();">clearcanvas
+			<button onclick="cleanResultOnCanvas();">clean result on canvas
 			</button>
 		</div>
 	</div>
@@ -117,17 +117,21 @@
 	
 	</div>
 	
-	<div id= getarea>
-		<input id = fx>input first point coordinate x</input>
-		<input id = fy>input first point coordinate y</input>
-		<input id = sx>input second point coordinate x</input>
-		<input id = sy>input second point coordinate y</input>
-		<!--button id="btn_input" onclick="getInput()">Click me!!</button-->
-		<div id="starttime1"></div>
-		<div id="endtime1"></div>
-		<form>
-			 <button type="button" id="update-area-btn" class="btn btn-default-area">update this area</button>
-		</form>
+	<div id="getarea">
+	Restrict the result inside a zone:<br>
+		<select id="zone_sel">
+			
+		</select><br>
+		<button type="button" onclick="updateResultWithZone();" id="update_zone_btn" class="btn btn-default" disabled>Update</button><br>
+		<br>
+		Create a new zone for this floorplan:<strong>(This is currently not used)</strong><br>
+		<input id = "zone_no">Number of the new zone <br>
+		<input id = "tl_x">top left point coordinate x <br>
+		<input id = "tl_y">top left point coordinate y <br>
+		<input id = "br_x">bottom right point coordinate x <br>
+		<input id = "br_y">bottom right point coordinate y <br>
+		<button type="button" id="update-area-btn" class="btn btn-default">Create Zone</button>
+	</div>
 		
 		
 	</body>

@@ -233,3 +233,38 @@ def convertRssiDist(rssi):
     n = 3
     d = 10**((rssi - a)/((-10)*n))
     return d
+
+
+def getZoneForFloorplan(request,fp_id):
+    print "looking for zones of floorplan:"
+    print fp_id
+    return_list = {"zone_list":[]}
+    try:
+        zone_list = ZONE.objects.filter(FLOORPLAN=fp_id)
+    except BaseException:
+        type, value, traceback = sys.exc_info()
+        print('Error: %s' % (value))
+    for zone in zone_list:
+        return_list["zone_list"].append({"zone_id":zone.id,
+                                          "zone_no":zone.USER_NO,
+                                          "tl_x":zone.CORD_X_TOP_LEFT,
+                                          "tl_y":zone.CORD_Y_TOP_LEFT,
+                                          "br_x":zone.CORD_X_BOTTOM_RIGHT,
+                                          "br_x":zone.CORD_Y_BOTTOM_RIGHT,
+                                          "note":zone.NOTES})
+    return JsonResponse(return_list)
+
+def getZoneInfo(request,zone_id):
+    try:
+        zone = ZONE.objects.get(id=zone_id)
+    except BaseException:
+        type, value, traceback = sys.exc_info()
+        print('Error: %s' % (value))
+    return_dict = {"zone_id":zone.id,
+                  "zone_no":zone.USER_NO,
+                  "tl_x":zone.CORD_X_TOP_LEFT,
+                  "tl_y":zone.CORD_Y_TOP_LEFT,
+                  "br_x":zone.CORD_X_BOTTOM_RIGHT,
+                  "br_y":zone.CORD_Y_BOTTOM_RIGHT,
+                  "note":zone.NOTES}
+    return JsonResponse(return_dict)

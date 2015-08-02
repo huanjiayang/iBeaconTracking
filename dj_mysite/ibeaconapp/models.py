@@ -91,3 +91,15 @@ class RSSI(models.Model):
     
     def __unicode__(self):
         return self.RSSI
+    
+class ZONE(models.Model):
+    FLOORPLAN = models.ForeignKey(FLOORPLAN, null=False)
+    USER_NO = models.IntegerField(default = 0, null=False)
+    CORD_X_TOP_LEFT = models.DecimalField(default = 0.0, decimal_places=2, max_digits=10, blank=True, null=True)
+    CORD_Y_TOP_LEFT = models.DecimalField(default = 0.0, decimal_places=2, max_digits=10, blank=True, null=True)
+    CORD_X_BOTTOM_RIGHT = models.DecimalField(default = 0.0, decimal_places=2, max_digits=10, blank=True, null=True)
+    CORD_Y_BOTTOM_RIGHT = models.DecimalField(default = 0.0, decimal_places=2, max_digits=10, blank=True, null=True)
+    NOTES = models.CharField(max_length = 250, blank=True, null=True)
+    
+    def __unicode__(self):
+        return self.NOTES
