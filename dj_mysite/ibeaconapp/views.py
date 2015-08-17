@@ -250,7 +250,7 @@ def getZoneForFloorplan(request,fp_id):
                                           "tl_x":zone.CORD_X_TOP_LEFT,
                                           "tl_y":zone.CORD_Y_TOP_LEFT,
                                           "br_x":zone.CORD_X_BOTTOM_RIGHT,
-                                          "br_x":zone.CORD_Y_BOTTOM_RIGHT,
+                                          "br_y":zone.CORD_Y_BOTTOM_RIGHT,
                                           "note":zone.NOTES})
     return JsonResponse(return_list)
 

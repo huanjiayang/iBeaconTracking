@@ -17,6 +17,7 @@ var sliderleftvalue;
 var sliderrightvalue;
 var currentfloorplan;
 var currentdeployment;
+var zone_list;
 //var start_date;
 //var end_date;
 
@@ -125,6 +126,36 @@ function enableExportFile(){
 		link.click();
 		
 	});
+	
+	document.getElementById("export-file-with-zone-btn").disabled = false;
+	$('#export-file-with-zone-btn').click(function() {
+		
+		var data = loc_history;
+		var csvContent = "data:text/csv;charset=utf-8,";
+		data.forEach(function(infoArray, index){
+
+			dataString = infoArray["time"]+","+infoArray["x"]+","+infoArray["y"];
+			for(var i=0; i<zone_list.length; i++){
+				//alert(infoArray["x"] > zone_list[i]['tl_x']);
+				if(infoArray["x"] > zone_list[i]['tl_x'] && infoArray["y"] > zone_list[i]['tl_y'] && infoArray["x"] < zone_list[i]['br_x'] && infoArray["y"] < zone_list[i]['br_y']){
+					dataString = dataString + ","+ zone_list[i]["zone_no"]+","+ zone_list[i]["note"];
+				}
+			}
+   		   
+   csvContent += dataString + "\n";
+
+		});
+		
+		var encodedUri = encodeURI(csvContent);
+		//window.open(encodedUri);
+		var link = document.createElement("a");
+		link.setAttribute("href", encodedUri);
+		link.setAttribute("download", "my_data.csv");
+
+		link.click();
+		
+	});
+	
 }
 
 
@@ -397,7 +428,6 @@ function onFloorplanChange(fp_sel){
 			 disableZoneRestriction();
 			 //get list of zones available for this floorplan
 			 getZone(current_floorplan);
-			 
 		 },
 		 failure: function(){alert('Failed to get deployment list from server...');}
 	 });
@@ -422,7 +452,7 @@ function getZone(fp_id){
 				 html += '</option>';
 	 		}
 			 document.getElementById("zone_sel").innerHTML = html;
-			 
+			 zone_list = data["zone_list"];
 		 },
 		 failure: function(){alert('Failed to get deployment list from server...');}
 	 });
