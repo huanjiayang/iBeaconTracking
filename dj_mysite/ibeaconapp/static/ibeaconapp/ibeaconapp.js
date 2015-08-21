@@ -141,20 +141,55 @@ function enableExportFile(){
 					dataString = dataString + ","+ zone_list[i]["zone_no"]+","+ zone_list[i]["note"];
 				}
 			}
-   		   
-   csvContent += dataString + "\n";
-
+			csvContent += dataString + "\n";
 		});
-		
 		var encodedUri = encodeURI(csvContent);
 		//window.open(encodedUri);
 		var link = document.createElement("a");
 		link.setAttribute("href", encodedUri);
 		link.setAttribute("download", "my_data.csv");
-
 		link.click();
-		
 	});
+	
+	document.getElementById("export-awc-btn").disabled = false;
+	$('#export-awc-btn').click(function() {
+		var data = loc_history;
+		var awcContent = "data:text/plain;charset=utf-8,"
+		awcContent += "Participant 1";
+		awcContent += "\n";
+		
+		var t = data[0]["time"].split(" ");
+		awcContent += t[2]+"-"+t[1]+"-"+t[5].substr(2,2);
+		awcContent += "\n";
+		awcContent += t[3];
+		awcContent += "\n";
+		awcContent += 1;
+		awcContent += "\n";
+		for(var i=5; i<12; i++){
+			awcContent += "Not specified";
+			awcContent += "\n";
+		}
+		data.forEach(function(infoArray, index){
+
+			var not_in_zone = true;
+			for(var i=0; i<zone_list.length; i++){
+				//alert(infoArray["x"] > zone_list[i]['tl_x']);
+				if(infoArray["x"] > zone_list[i]['tl_x'] && infoArray["y"] > zone_list[i]['tl_y'] && infoArray["x"] < zone_list[i]['br_x'] && infoArray["y"] < zone_list[i]['br_y']){
+					//dataString = dataString + ","+ zone_list[i]["zone_no"]+","+ zone_list[i]["note"];
+					awcContent += zone_list[i]["zone_no"];
+					not_in_zone = false;
+				}
+			}
+			if(not_in_zone)awcContent += 0;
+			awcContent += "\n";
+		});
+		var encodedUri = encodeURI(awcContent);
+		//window.open(encodedUri);
+		var link = document.createElement("a");
+		link.setAttribute("href", encodedUri);
+		link.setAttribute("download", "my_data.awc");
+		link.click();
+	});	
 	
 }
 
