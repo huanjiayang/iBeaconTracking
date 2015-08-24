@@ -170,17 +170,15 @@ function enableExportFile(){
 			awcContent += "\n";
 		}
 		data.forEach(function(infoArray, index){
-
-			var not_in_zone = true;
+			var zone_no_min = 0;
 			for(var i=0; i<zone_list.length; i++){
-				//alert(infoArray["x"] > zone_list[i]['tl_x']);
 				if(infoArray["x"] > zone_list[i]['tl_x'] && infoArray["y"] > zone_list[i]['tl_y'] && infoArray["x"] < zone_list[i]['br_x'] && infoArray["y"] < zone_list[i]['br_y']){
-					//dataString = dataString + ","+ zone_list[i]["zone_no"]+","+ zone_list[i]["note"];
-					awcContent += zone_list[i]["zone_no"];
+					if(zone_list[i]["zone_no"]<zone_no_min  || zone_no_min==0)
+						zone_no_min = zone_list[i]["zone_no"];
 					not_in_zone = false;
 				}
 			}
-			if(not_in_zone)awcContent += 0;
+			awcContent += zone_no_min;
 			awcContent += "\n";
 		});
 		var encodedUri = encodeURI(awcContent);
